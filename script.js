@@ -50,18 +50,48 @@ function renderList() {
     ul.appendChild(li);
   });
 }
-
 function showVictoryMessage() {
-  const container = document.createElement("div");
-  container.className = "victory";
-  container.innerHTML = `
+  // Crear overlay
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+
+  // Crear ventana modal
+  const modal = document.createElement("div");
+  modal.className = "modal";
+  modal.innerHTML = `
     <h2>🎉 ¡Felicidades!</h2>
     <p>Has adivinado la palabra secreta del mes: <strong>${secretWord}</strong></p>
-    <p>Tómale una foto a esta pantalla y envíala a <a href="mailto:jquirola@transoceanica.com.ec">jquirola@transoceanica.com.ec</a> 📸</p>
-    <p>¡Gracias por jugar con nosotros!</p>
+    <div class="modal-buttons">
+      <button onclick="window.open('https://www.transoceanica.com.ec', '_blank')">
+        🌐 Visitar Transoceánica
+      </button>
+      <button onclick="copyLink()">
+        📎 Compartir el juego
+      </button>
+    </div>
+    <p class="small">Tómale una foto a esta pantalla y envíala a <a href="mailto:jquirola@transoceanica.com.ec">jquirola@transoceanica.com.ec</a> 📸</p>
+    <div id="copyAlert" class="copy-alert">¡Enlace copiado al portapapeles!</div>
   `;
-  document.body.appendChild(container);
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
 }
+
+function copyLink() {
+  const dummy = document.createElement("input");
+  document.body.appendChild(dummy);
+  dummy.value = window.location.href;
+  dummy.select();
+  document.execCommand("copy");
+  document.body.removeChild(dummy);
+
+  const alertBox = document.getElementById("copyAlert");
+  alertBox.style.opacity = "1";
+  setTimeout(() => {
+    alertBox.style.opacity = "0";
+  }, 2000);
+}
+
 
 document.getElementById("btnGuess").addEventListener("click", checkGuess);
 document.getElementById("guessInput").addEventListener("keypress", e => {
