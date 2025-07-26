@@ -1,8 +1,7 @@
-
 body {
   font-family: Arial, sans-serif;
   text-align: center;
-  background-color: #f2f2f2;
+  background-color: #f9f9f9;
   padding: 20px;
 }
 
@@ -15,4 +14,23 @@ input, button {
 ul {
   list-style-type: none;
   padding: 0;
+  max-width: 600px;
+  margin: auto;
+}
+
+li {
+  margin: 5px 0;
+  font-size: 18px;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.guess-word {
+  font-weight: bold;
+}
+
+.guess-feedback {
+  font-style: italic;
 }
