@@ -27,24 +27,26 @@ function renderList() {
   const ul = document.getElementById("results");
   ul.innerHTML = "";
 
-  guessedWords
-    .sort((a, b) => a.score - b.score)
-    .forEach(({ word, score, valid, correct }) => {
-      const li = document.createElement("li");
-      if (!valid) {
-        li.innerHTML = `<span class="guess-word">${word}</span><span class="guess-feedback">❌ No válida</span>`;
-        li.style.color = "var(--muted)";
-      } else {
-        li.style.background = getBackground(score);
-        li.style.color = "#121212";
-        if (correct) {
-          li.innerHTML = `<span class="guess-word">${word}</span><span class="guess-feedback">🎉 ¡Correcta!</span>`;
-        } else {
-          li.innerHTML = `<span class="guess-word">${word}</span><span class="guess-feedback">🔥 Proximidad ${score}</span>`;
-        }
-      }
-      ul.appendChild(li);
-    });
+  // Separar válidos y no válidos
+  const valid = guessedWords.filter(w => w.valid).sort((a, b) => a.score - b.score);
+  const invalid = guessedWords.filter(w => !w.valid);
+
+  [...valid, ...invalid].forEach(({ word, score, valid, correct }) => {
+    const li = document.createElement("li");
+
+    if (!valid) {
+      li.innerHTML = `<span class="guess-word">${word}</span><span class="guess-feedback">❌ No válida</span>`;
+      li.style.color = "var(--muted)";
+    } else {
+      li.style.background = getBackground(score);
+      li.style.color = "#121212";
+      li.innerHTML = correct
+        ? `<span class="guess-word">${word}</span><span class="guess-feedback">🎉 ¡Correcta!</span>`
+        : `<span class="guess-word">${word}</span><span class="guess-feedback">🔥 Proximidad ${score}</span>`;
+    }
+
+    ul.appendChild(li);
+  });
 }
 
 function showVictoryMessage() {
