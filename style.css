@@ -29,14 +29,6 @@ h1 { margin-bottom: 20px; }
   justify-content: center;
   margin-bottom: 20px;
 }
-}
-p { margin-bottom: 20px; }
-
-.input-group {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
 input {
   padding: 10px;
   font-size: 16px;
@@ -177,4 +169,13 @@ li {
 .small {
   font-size: 14px;
   color: #333;
+}
+.intro-text {
+  max-width: 600px;
+  margin: 0 auto 20px;
+  padding: 0 15px;
+  font-size: 18px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--text);
 }
