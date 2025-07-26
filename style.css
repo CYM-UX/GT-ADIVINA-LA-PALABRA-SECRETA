@@ -185,3 +185,8 @@ li {
   font-weight: bold;
   font-size: 20px;
 }
+.attempts {
+  color: var(--text);
+  font-size: 16px;
+  margin-top: 10px;
+}
