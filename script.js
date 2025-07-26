@@ -65,7 +65,7 @@ function showVictoryMessage() {
   modal.innerHTML = `
     <h2>🎉 ¡Felicidades!</h2>
     <p>Has adivinado la palabra secreta del mes: <strong>${secretWord}</strong></p>
-    <p><strong>Total de intentos:${attempts}</strong> </p>
+    <p><strong>Total de intentos: ${attempts}</strong> </p>
     <div class="modal-buttons">
       <button onclick="window.open('https://www.transoceanica.com.ec', '_blank')">
         Regresar al Boletín No10
