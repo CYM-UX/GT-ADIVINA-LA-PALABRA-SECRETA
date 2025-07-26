@@ -17,9 +17,9 @@ fetch("palabras.json")
   });
 
 function getBackground(score) {
-  if (score === 0) return "var(--green)";
-  if (score <= 5) return "var(--yellow)";
-  if (score <= 15) return "var(--orange)";
+  if (score <= 20) return "var(--green)";
+  if (score <= 50) return "var(--yellow)";
+  if (score <= 100) return "var(--orange)";
   return "var(--red)";
 }
 
@@ -27,8 +27,10 @@ function renderList() {
   const ul = document.getElementById("results");
   ul.innerHTML = "";
 
-  // Separar válidos y no válidos
-  const valid = guessedWords.filter(w => w.valid).sort((a, b) => a.score - b.score);
+  const valid = guessedWords
+    .filter(w => w.valid)
+    .sort((a, b) => a.score - b.score);
+
   const invalid = guessedWords.filter(w => !w.valid);
 
   [...valid, ...invalid].forEach(({ word, score, valid, correct }) => {
@@ -79,7 +81,7 @@ function checkGuess() {
     guessedWords.push({ word, valid: false });
   } else {
     const index = wordList.indexOf(word);
-    const score = index; // score 0 = palabra secreta
+    const score = index + 1; // ✅ ahora la secreta es score 1
     const correct = word === secretWord;
     guessedWords.push({ word, score, valid: true, correct });
 
