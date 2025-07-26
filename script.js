@@ -66,6 +66,7 @@ function showVictoryMessage() {
     <h2>🎉 ¡Felicidades!</h2>
     <p>Has adivinado la palabra secreta del mes: <strong>${secretWord}</strong></p>
     <p><strong>Total de intentos: ${attempts}</strong> </p>
+    <p class="small">📸 Tómale captura a esta pantalla y envíala a <a href="mailto:jquirola@transoceanica.com.ec">jquirola@transoceanica.com.ec</a> para saber que jugaste!</p>
     <div class="modal-buttons">
       <button onclick="window.open('https://www.transoceanica.com.ec', '_blank')">
         Regresar al Boletín No10
@@ -73,9 +74,9 @@ function showVictoryMessage() {
       <button onclick="copyLink()">
         Compartir el juego
       </button>
+          <div id="copyAlert" class="copy-alert">¡Enlace copiado al portapapeles!</div>
     </div>
-    <p class="small">📸 Tómale captura a esta pantalla y envíala a <a href="mailto:jquirola@transoceanica.com.ec">jquirola@transoceanica.com.ec</a> para saber que jugaste!</p>
-    <div id="copyAlert" class="copy-alert">¡Enlace copiado al portapapeles!</div>
+
   `;
 
   overlay.appendChild(modal);
