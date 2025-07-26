@@ -2,6 +2,7 @@ let secretWord = "";
 let wordList = [];
 let isReady = false;
 let gameOver = false;
+let attempts = 0;
 const guessedWords = [];
 
 fetch("palabras.json")
@@ -22,7 +23,10 @@ function getBackground(score) {
   if (score <= 100) return "var(--orange)";
   return "var(--red)";
 }
-
+function updateAttemptsDisplay() {
+  const counter = document.getElementById("attemptsCounter");
+  counter.textContent = `Intentos: ${attempts}`;
+}
 function renderList() {
   const ul = document.getElementById("results");
   ul.innerHTML = "";
@@ -61,15 +65,16 @@ function showVictoryMessage() {
   modal.innerHTML = `
     <h2>🎉 ¡Felicidades!</h2>
     <p>Has adivinado la palabra secreta del mes: <strong>${secretWord}</strong></p>
+    <p><strong>Total de intentos:${attempts}</strong> </p>
     <div class="modal-buttons">
       <button onclick="window.open('https://www.transoceanica.com.ec', '_blank')">
-        🌐 Visitar Transoceánica
+        Regresar al Boletín No10
       </button>
       <button onclick="copyLink()">
-        📎 Compartir el juego
+        Compartir el juego
       </button>
     </div>
-    <p class="small">Tómale una foto a esta pantalla y envíala a <a href="mailto:jquirola@transoceanica.com.ec">jquirola@transoceanica.com.ec</a> 📸</p>
+    <p class="small">📸 Tómale captura a esta pantalla y envíala a <a href="mailto:jquirola@transoceanica.com.ec">jquirola@transoceanica.com.ec</a> para saber que jugaste!</p>
     <div id="copyAlert" class="copy-alert">¡Enlace copiado al portapapeles!</div>
   `;
 
@@ -107,6 +112,8 @@ function checkGuess() {
   if (!word || guessedWords.find(w => w.word === word)) return;
 
   if (!wordList.includes(word)) {
+    attempts++;
+    updateAttemptsDisplay();
     guessedWords.push({ word, valid: false });
   } else {
     const index = wordList.indexOf(word);
