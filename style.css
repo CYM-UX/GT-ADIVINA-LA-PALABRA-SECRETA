@@ -179,3 +179,7 @@ li {
   text-align: center;
   color: var(--text);
 }
+.guess-score {
+  font-weight: bold;
+  font-size: 20px;
+}
