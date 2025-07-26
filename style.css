@@ -9,11 +9,16 @@
   --muted: #888;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Nunito', sans-serif;
+}
+
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: Arial, sans-serif;
   text-align: center;
   padding: 20px;
 }
@@ -47,6 +52,7 @@ ul {
   list-style: none;
   max-width: 600px;
   margin: auto;
+  padding: 0;
 }
 li {
   display: flex;
@@ -55,10 +61,12 @@ li {
   border: 1px solid var(--border);
   margin-bottom: 8px;
   border-radius: 4px;
+  font-size: 18px;
 }
 .guess-word { font-weight: bold; }
 .guess-feedback { opacity: 0.9; }
 
+/* Mensaje de victoria */
 .victory {
   margin-top: 40px;
   padding: 20px;
