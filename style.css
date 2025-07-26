@@ -63,7 +63,7 @@ li {
   border-radius: 10px;
   font-size: 18px;
 }
-.guess-word { font-weight: bold; }
+.guess-word { font-weight: 700; }
 .guess-feedback { opacity: 0.9; }
 
 /* Mensaje de victoria */
