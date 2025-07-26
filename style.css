@@ -13,7 +13,7 @@
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: Nunito, sans-serif;
+  font-family: Arial, sans-serif;
   text-align: center;
   padding: 20px;
 }
@@ -58,3 +58,32 @@ li {
 }
 .guess-word { font-weight: bold; }
 .guess-feedback { opacity: 0.9; }
+
+.victory {
+  margin-top: 40px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: var(--green);
+  color: #121212;
+  animation: popIn 0.6s ease-out;
+  max-width: 600px;
+  margin-inline: auto;
+  box-shadow: 0 0 12px rgba(0, 255, 120, 0.4);
+}
+.victory h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+.victory p {
+  margin: 8px 0;
+  font-size: 18px;
+}
+.victory a {
+  color: #121212;
+  font-weight: bold;
+  text-decoration: underline;
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
