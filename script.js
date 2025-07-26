@@ -1,62 +1,57 @@
 let secretWord = "";
 let wordList = [];
 let isReady = false;
-let guessedWords = new Set();
+const guessed = new Set();
 
 fetch("palabras.json")
-  .then(response => response.json())
+  .then(r => r.json())
   .then(data => {
     wordList = data;
     secretWord = wordList[0];
     isReady = true;
   })
   .catch(err => {
-    console.error("Error cargando palabras:", err);
-    alert("No se pudo cargar el juego. Intenta más tarde.");
+    console.error(err);
+    alert("No se cargó la lista de palabras.");
   });
 
-function getColor(score) {
-  if (score > 480) return "#2ecc71"; // verde
-  if (score > 400) return "#f1c40f"; // amarillo
-  if (score > 300) return "#e67e22"; // naranja
-  return "#e74c3c"; // rojo
+function getBackground(score) {
+  if (score > 480) return "var(--green)";
+  if (score > 400) return "var(--yellow)";
+  if (score > 300) return "var(--orange)";
+  return "var(--red)";
 }
 
+document.getElementById("btnGuess").addEventListener("click", checkGuess);
+document.getElementById("guessInput").addEventListener("keypress", e => {
+  if (e.key === "Enter") checkGuess();
+});
+
 function checkGuess() {
-  if (!isReady) {
-    alert("Cargando el juego... intenta en unos segundos.");
-    return;
-  }
+  if (!isReady) return alert("Cargando juego, espera un poco…");
 
-  const inputElement = document.getElementById("guessInput");
-  const input = inputElement.value.trim().toLowerCase();
-  const resultBox = document.getElementById("results");
+  const inputEl = document.getElementById("guessInput");
+  const word = inputEl.value.trim().toLowerCase();
+  if (!word || guessed.has(word)) { inputEl.value = ""; return; }
+  guessed.add(word);
 
-  if (!input || guessedWords.has(input)) {
-    inputElement.value = "";
-    return;
-  }
-
-  guessedWords.add(input);
   const li = document.createElement("li");
+  li.style.background = "#1e1e1e";
 
-  if (!wordList.includes(input)) {
-    li.innerHTML = `<span class="guess-word">${input}</span> <span class="guess-feedback">❌ No está en la lista</span>`;
-    li.style.color = "#7f8c8d";
+  if (!wordList.includes(word)) {
+    li.innerHTML = `<span class="guess-word">${word}</span><span class="guess-feedback">❌ No válida</span>`;
+    li.style.color = "var(--muted)";
   } else {
-    const index = wordList.indexOf(input);
-    const score = 500 - index;
-    const color = getColor(score);
-
-    if (input === secretWord) {
-      li.innerHTML = `<span class="guess-word">${input}</span> <span class="guess-feedback">🎉 ¡Palabra correcta!</span>`;
-      li.style.color = "#27ae60";
-    } else {
-      li.innerHTML = `<span class="guess-word">${input}</span> <span class="guess-feedback">🔥 Proximidad ${score}</span>`;
-      li.style.color = color;
-    }
+    const idx = wordList.indexOf(word);
+    const score = 500 - idx;
+    const bg = getBackground(score);
+    li.style.background = bg;
+    li.style.color = "#121212";
+    li.innerHTML = word === secretWord
+      ? `<span class="guess-word">${word}</span><span class="guess-feedback">🎉 Correcta!</span>`
+      : `<span class="guess-word">${word}</span><span class="guess-feedback">🔥 Proximidad ${score}</span>`;
   }
 
-  resultBox.appendChild(li);
-  inputElement.value = "";
+  document.getElementById("results").appendChild(li);
+  inputEl.value = "";
 }
