@@ -1,7 +1,7 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: Nunito, sans-serif;
   text-align: center;
-  background-color: #f9f9f9;
+  background-color: #15202b;
   padding: 20px;
 }
 
@@ -9,6 +9,8 @@ input, button {
   padding: 10px;
   font-size: 16px;
   margin: 10px;
+  font-color: #fff;
+  background-color: #00ba7c;
 }
 
 ul {
@@ -24,7 +26,8 @@ li {
   display: flex;
   justify-content: space-between;
   padding: 8px;
-  border-bottom: 1px solid #ddd;
+  border: 3px solid #fff;
+  border-radius: 10px;
 }
 
 .guess-word {
