@@ -187,7 +187,7 @@ li {
 }
 .attempts {
   color: var(--text);
-  font-size: 16px;
+  font-size: 18px;
   margin-top: 10px;
 }
 .input-group-wrapper {
@@ -198,6 +198,7 @@ li {
 .attempts-right {
   text-align: right;
   margin-bottom: 5px;
-  font-size: 16px;
+  margin-right: 5px;
+  font-size: 18px;
   color: var(--text);
 }
