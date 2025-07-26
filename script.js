@@ -43,8 +43,8 @@ function renderList() {
       li.style.background = getBackground(score);
       li.style.color = "#121212";
       li.innerHTML = correct
-        ? `<span class="guess-word">${word}</span><span class="guess-feedback">🎉 ¡Correcta!</span>`
-        : `<span class="guess-word">${word}</span><span class="guess-feedback"> ${score} </span>`;
+        ? `<span class="guess-word">${word}</span><span class="guess-score">🎉 ¡Correcta!</span>`
+        : `<span class="guess-word">${word}</span><span class="guess-score"><strong>${score}</strong></span>`;
     }
 
     ul.appendChild(li);
