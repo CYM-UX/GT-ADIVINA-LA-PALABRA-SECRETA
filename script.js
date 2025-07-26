@@ -76,7 +76,6 @@ function showVictoryMessage() {
   overlay.appendChild(modal);
   document.body.appendChild(overlay);
 }
-
 function copyLink() {
   const dummy = document.createElement("input");
   document.body.appendChild(dummy);
