@@ -110,14 +110,13 @@ function checkGuess() {
   inputEl.value = "";
 
   if (!word || guessedWords.find(w => w.word === word)) return;
-
+  attempts++;
+  updateAttemptsDisplay();
   if (!wordList.includes(word)) {
-    attempts++;
-    updateAttemptsDisplay();
     guessedWords.push({ word, valid: false });
   } else {
     const index = wordList.indexOf(word);
-    const score = index + 1; // ✅ ahora la secreta es score 1
+    const score = index + 1;
     const correct = word === secretWord;
     guessedWords.push({ word, score, valid: true, correct });
 
