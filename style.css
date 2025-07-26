@@ -78,7 +78,7 @@ li {
   animation: popIn 0.6s ease-out;
   max-width: 600px;
   margin-inline: auto;
-  box-shadow: 0 0 12px rgba(0, 255, 120, 0.4);
+  box-shadow: 0 0 12px rgba(0, 255, 120, 0.8);
 }
 .victory h2 {
   font-size: 28px;
@@ -118,6 +118,7 @@ li {
   text-align: center;
   max-width: 400px;
   width: 90%;
+  box-shadow: 0 0 12px rgba(0, 255, 120, 0.8);
   animation: popIn 0.4s ease-out;
   position: relative;
 }
@@ -129,7 +130,7 @@ li {
 
 .modal p {
   margin-bottom: 15px;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .modal a {
@@ -147,7 +148,7 @@ li {
 
 .modal-buttons button {
   padding: 10px 15px;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   border: none;
   border-radius: 6px;
@@ -163,13 +164,13 @@ li {
 .copy-alert {
   opacity: 0;
   transition: opacity 0.5s;
-  font-size: 14px;
+  font-size: 16px;
   color: #27ae60;
   margin-top: 10px;
 }
 
 .small {
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
 }
 .intro-text {
