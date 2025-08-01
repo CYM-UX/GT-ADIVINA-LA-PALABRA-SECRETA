@@ -171,7 +171,9 @@ li {
   color: #27ae60;
   margin-top: 10px;
 }
-
+.copy-alert.show {
+  opacity: 1;
+}
 .small {
   font-size: 16px;
   color: #333;
