@@ -85,20 +85,18 @@ function showVictoryMessage() {
 function copyLink() {
 const linkPersonalizado = "https://transoceanica.short.gy/Adivinalapalabrasecreta";
 
-  navigator.clipboard.writeText(linkPersonalizado).then(() => {
-    // Mostrar alerta personalizada
+ navigator.clipboard.writeText(linkPersonalizado).then(() => {
     const alertBox = document.getElementById("copyAlert");
-    alertBox.style.display = "block";
-    
-    // Ocultar alerta después de 3 segundos
+
+    alertBox.classList.add("show");
+
     setTimeout(() => {
-      alertBox.style.display = "none";
+      alertBox.classList.remove("show");
     }, 3000);
   }).catch(err => {
     console.error("Error al copiar el enlace:", err);
   });
 }
-
 
 document.getElementById("btnGuess").addEventListener("click", checkGuess);
 document.getElementById("guessInput").addEventListener("keypress", e => {
