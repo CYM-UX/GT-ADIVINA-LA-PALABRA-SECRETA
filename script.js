@@ -68,7 +68,7 @@ function showVictoryMessage() {
     <p><strong>Total de intentos: ${attempts}</strong> </p>
     <p class="small">📸 Tómale captura a esta pantalla y envíala a <a href="mailto:jquirola@transoceanica.com.ec">jquirola@transoceanica.com.ec</a> para saber que jugaste!</p>
     <div class="modal-buttons">
-      <button onclick="window.open('https://drive.google.com/file/d/1a6mO2Z-pVIPIduORLEbTD8EjXx9VBBB1/view?usp=sharing', '_blank')">
+      <button onclick="window.open('https://transoceanica.short.gy/BoletinNo10', '_blank')">
         Regresar al Boletín No10
       </button>
       <button onclick="copyLink()">
@@ -83,18 +83,20 @@ function showVictoryMessage() {
   document.body.appendChild(overlay);
 }
 function copyLink() {
-  const dummy = document.createElement("input");
-  document.body.appendChild(dummy);
-  dummy.value = window.location.href;
-  dummy.select();
-  document.execCommand("copy");
-  document.body.removeChild(dummy);
+const linkPersonalizado = "https://transoceanica.short.gy/Adivinalapalabrasecreta";
 
-  const alertBox = document.getElementById("copyAlert");
-  alertBox.style.opacity = "1";
-  setTimeout(() => {
-    alertBox.style.opacity = "0";
-  }, 2000);
+  navigator.clipboard.writeText(linkPersonalizado).then(() => {
+    // Mostrar alerta personalizada
+    const alertBox = document.getElementById("copyAlert");
+    alertBox.style.display = "block";
+    
+    // Ocultar alerta después de 3 segundos
+    setTimeout(() => {
+      alertBox.style.display = "none";
+    }, 3000);
+  }).catch(err => {
+    console.error("Error al copiar el enlace:", err);
+  });
 }
 
 
