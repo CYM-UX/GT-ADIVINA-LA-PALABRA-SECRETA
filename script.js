@@ -19,8 +19,8 @@ fetch("palabras.json")
 
 function getBackground(score) {
   if (score <= 20) return "var(--green)";
-  if (score <= 50) return "var(--yellow)";
-  if (score <= 100) return "var(--orange)";
+  if (score <= 100) return "var(--yellow)";
+  if (score <= 200) return "var(--orange)";
   return "var(--red)";
 }
 function updateAttemptsDisplay() {
@@ -68,7 +68,7 @@ function showVictoryMessage() {
     <p><strong>Total de intentos: ${attempts}</strong> </p>
     <p class="small">📸 Tómale captura a esta pantalla y envíala a <a href="mailto:jquirola@transoceanica.com.ec">jquirola@transoceanica.com.ec</a> para saber que jugaste!</p>
     <div class="modal-buttons">
-      <button onclick="window.open('https://www.transoceanica.com.ec', '_blank')">
+      <button onclick="window.open('https://drive.google.com/file/d/1a6mO2Z-pVIPIduORLEbTD8EjXx9VBBB1/view?usp=sharing', '_blank')">
         Regresar al Boletín No10
       </button>
       <button onclick="copyLink()">
