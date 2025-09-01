@@ -66,7 +66,7 @@ function showVictoryMessage() {
     <h2>🎉 ¡Felicidades!</h2>
     <p>Has adivinado la palabra secreta del mes: <strong>${secretWord}</strong></p>
     <p><strong>Total de intentos: ${attempts}</strong> </p>
-    <p class="small">📸 Tómale captura a esta pantalla y envíala a <a href="mailto:jquirola@transoceanica.com.ec">jquirola@transoceanica.com.ec</a> para saber que jugaste!</p>
+    <p class="small">📸 Tómale captura a esta pantalla y envíala a <a href="mailto:jquirola@transoceanica.com.ec">jquirola@transoceanica.com.ec</a> para entrar al sorteo!</p>
     <div class="modal-buttons">
       <button onclick="window.open('https://transoceanica.short.gy/BoletinNo10', '_blank')">
         Regresar al Boletín No10
