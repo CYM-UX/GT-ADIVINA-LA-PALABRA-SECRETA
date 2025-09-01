@@ -5,8 +5,8 @@ let gameOver = false;
 let attempts = 0;
 const guessedWords = [];
 
-fetch("palabras.json")
-  .then(r => r.json())
+fetch("palabras_sempiterno_480.js")
+  .then(r => r.js())
   .then(data => {
     wordList = data;
     secretWord = wordList[0];
