@@ -68,7 +68,7 @@ function showVictoryMessage() {
     <p><strong>Total de intentos: ${attempts}</strong> </p>
     <p class="small">📸 Tómale captura a esta pantalla y envíala a <a href="mailto:jquirola@transoceanica.com.ec">jquirola@transoceanica.com.ec</a> para entrar al sorteo!</p>
     <div class="modal-buttons">
-      <button onclick="window.open('https://transoceanica.short.gy/BoletinNo10', '_blank')">
+      <button onclick="window.open('https://transoceanica.short.gy/BoletinNo11', '_blank')">
         Regresar al Boletín No10
       </button>
       <button onclick="copyLink()">
