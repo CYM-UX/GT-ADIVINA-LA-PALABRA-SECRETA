@@ -85,14 +85,6 @@
   </main>
 
   <div id="toast" role="alert"></div>
-  <!-- Modal Felicidades -->
-<div id="modal-overlay">
-  <div id="modal-box">
-    <p><strong>¡Felicidades GT!</strong><br>
-    Has adivinado la palabra secreta.<br>
-    Gracias por jugar.</p>
-  </div>
-</div>
 
   <script>
     /************************************
@@ -295,13 +287,8 @@
         colorKeyboard(grid[currentRow][i].ch, evals[i]);
       }
       const ok = evals.every(x=>x==='hit');
-if(ok){
-  finished = true; won = true;
-  resultEl.textContent = `¡Acertaste! La palabra era "${TARGET_WORD}".`;
-  toast('¡Excelente!');
-  document.getElementById('modal-overlay').style.display = 'flex'; // 👈 aquí
-  return;
-}
+      if (ok){ finished=true; won=true; resultEl.textContent = `¡Acertaste! La palabra era "${TARGET_WORD}".`; toast('¡Excelente!'); saveState(); return; }
+      currentRow++; currentCol=0; saveState();
       if (currentRow>=MAX_TRIES){ finished=true; won=false; resultEl.textContent = `Se acabaron los intentos. La palabra era "${TARGET_WORD}".`; toast('Inténtalo la próxima'); saveState(); }
     }
 
@@ -342,29 +329,6 @@ if(ok){
     document.getElementById('btn-reset').addEventListener('click', resetGame);
     document.getElementById('btn-share').addEventListener('click', shareResult);
 
-    /* Modal Felicidades */
-#modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.8);
-  display: none; /* oculto por defecto */
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-#modal-box {
-  background: #fff;
-  border: 1px solid #00ba58;
-  border-radius: 10px;
-  padding: 1.5rem 2rem;
-  max-width: 90%;
-  text-align: center;
-  color: #000;
-  font-size: 1rem;
-  line-height: 1.4;
-  font-weight: 500;
-}
-#modal-box strong { color: #00ba58; }
   </script>
 </body>
 </html>
