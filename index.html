@@ -11,9 +11,9 @@
       --tile:#3a3a3c;         /* borde/tiles vacíos */
       --text:#ffffff;         /* texto principal */
       --muted:#d7dadc;        /* texto secundario */
-      --hit:#6aaa64;          /* correcto (verde) */
-      --near:#c9b458;         /* casi (amarillo) */
-      --miss:#787c7e;         /* no está (gris) */
+      --hit:#00ba58;          /* correcto (verde) */
+      --near:#ffb600;         /* casi (amarillo) */
+      --miss:#3d3d3d;         /* no está (gris) */
       --accent:#ff7a00;       /* acento para CTA */
       --gap:0.5rem;           /* separación estándar */
     }
@@ -68,7 +68,7 @@
 </head>
 <body>
   <header>
-    <h1>La Palabra del Día</h1>
+    <h1>ADIVINA LA PALABRA SECRETA</h1>
   </header>
 
   <main class="container">
@@ -77,7 +77,7 @@
     <div id="kb" aria-label="Teclado en pantalla"></div>
 
     <div class="actions">
-      <button class="btn" id="btn-reset" title="Empezar de nuevo">Reiniciar</button>
+      <button class="btn" id="btn-reset" title="Empezar de nuevo">Empezar de nuevo</button>
       <button class="btn primary" id="btn-share" title="Copiar resultado">Compartir</button>
     </div>
 
@@ -85,6 +85,14 @@
   </main>
 
   <div id="toast" role="alert"></div>
+  <!-- Modal Felicidades -->
+<div id="modal-overlay">
+  <div id="modal-box">
+    <p><strong>¡Felicidades GT!</strong><br>
+    Has adivinado la palabra secreta.<br>
+    Gracias por jugar.</p>
+  </div>
+</div>
 
   <script>
     /************************************
@@ -287,9 +295,14 @@
         colorKeyboard(grid[currentRow][i].ch, evals[i]);
       }
       const ok = evals.every(x=>x==='hit');
-      if (ok){ finished=true; won=true; resultEl.textContent = `¡Acertaste! La palabra era "${TARGET_WORD}".`; toast('¡Excelente!'); saveState(); return; }
-      currentRow++; currentCol=0; saveState();
-      if (currentRow>=MAX_TRIES){ finished=true; won=false; resultEl.textContent = `Se acabaron los intentos. La palabra era "${TARGET_WORD}".`; toast('Inténtalo mañana'); saveState(); }
+if(ok){
+  finished = true; won = true;
+  resultEl.textContent = `¡Acertaste! La palabra era "${TARGET_WORD}".`;
+  toast('¡Excelente!');
+  document.getElementById('modal-overlay').style.display = 'flex'; // 👈 aquí
+  return;
+}
+      if (currentRow>=MAX_TRIES){ finished=true; won=false; resultEl.textContent = `Se acabaron los intentos. La palabra era "${TARGET_WORD}".`; toast('Inténtalo la próxima'); saveState(); }
     }
 
     function onKeydown(e){
@@ -328,6 +341,30 @@
     document.addEventListener('keydown', onKeydown);
     document.getElementById('btn-reset').addEventListener('click', resetGame);
     document.getElementById('btn-share').addEventListener('click', shareResult);
+
+    /* Modal Felicidades */
+#modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.8);
+  display: none; /* oculto por defecto */
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+#modal-box {
+  background: #fff;
+  border: 1px solid #00ba58;
+  border-radius: 10px;
+  padding: 1.5rem 2rem;
+  max-width: 90%;
+  text-align: center;
+  color: #000;
+  font-size: 1rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+#modal-box strong { color: #00ba58; }
   </script>
 </body>
 </html>
