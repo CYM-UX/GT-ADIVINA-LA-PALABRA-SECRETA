@@ -1,23 +1,333 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF‑8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GTs Juguemos</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>La Palabra del Día</title>
+  <meta name="description" content="Juego de adivinar la palabra del día en español (estilo Wordle) 100% cliente, listo para GitHub Pages." />
+  <style>
+    :root{
+      --bg:#121213;           /* fondo general */
+      --tile:#3a3a3c;         /* borde/tiles vacíos */
+      --text:#ffffff;         /* texto principal */
+      --muted:#d7dadc;        /* texto secundario */
+      --hit:#6aaa64;          /* correcto (verde) */
+      --near:#c9b458;         /* casi (amarillo) */
+      --miss:#787c7e;         /* no está (gris) */
+      --accent:#ff7a00;       /* acento para CTA */
+      --gap:0.5rem;           /* separación estándar */
+    }
+    html,body{height:100%;}
+    body{
+      margin:0; background:var(--bg); color:var(--text); font:16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      display:flex; flex-direction:column; align-items:center;
+    }
+    header{
+      width:100%; max-width:680px; padding:0.75rem 1rem; border-bottom:1px solid #2a2a2a; text-align:center; position:sticky; top:0; background:rgba(18,18,19,.85); backdrop-filter:saturate(180%) blur(6px);
+    }
+    h1{margin:0; font-size:1.25rem; letter-spacing:.08em; text-transform:uppercase}
+    .container{width:100%; max-width:680px; padding:1rem; display:flex; flex-direction:column; align-items:center; gap:var(--gap)}
+    /* Tablero */
+    #board{display:grid; grid-template-rows:repeat(var(--rows),1fr); gap:var(--gap); margin-top:.5rem; width:min(90vw,420px)}
+    .row{display:grid; grid-template-columns:repeat(var(--cols),1fr); gap:var(--gap)}
+    .tile{aspect-ratio:1/1; display:grid; place-items:center; border:2px solid var(--tile); font-weight:700; font-size:clamp(18px,5.2vw,28px); text-transform:uppercase; border-radius:.35rem;}
+    .tile.filled{border-color:#565758}
+    .tile.reveal{color:#fff; border-color:transparent;}
+    .tile.hit{background:var(--hit)}
+    .tile.near{background:var(--near)}
+    .tile.miss{background:var(--miss)}
+
+    /* Teclado */
+    #kb{display:grid; gap:var(--gap); width:min(95vw,680px); margin-top:1rem}
+    .kb-row{display:grid; grid-template-columns:repeat(10,1fr); gap:var(--gap)}
+    .kb-row.mid{grid-template-columns:repeat(10,1fr)}
+    .kb-row.low{grid-template-columns:1.5fr repeat(7,1fr) 1.5fr}
+    .key{user-select:none; border:none; border-radius:.5rem; padding:.8rem .5rem; background:#818384; color:#fff; font-weight:600; text-transform:uppercase; letter-spacing:.02em}
+    .key[data-code="Enter"], .key[data-code="Backspace"]{font-size:.9rem}
+    .key.small{font-size:.85rem}
+    .key.miss{background:var(--miss)}
+    .key.near{background:var(--near)}
+    .key.hit{background:var(--hit)}
+
+    /* Barra inferior (acciones) */
+    .actions{display:flex; gap:var(--gap); align-items:center; justify-content:center; margin:.5rem 0 1rem}
+    .btn{background:transparent; color:var(--muted); border:1px solid #2a2a2a; padding:.5rem .8rem; border-radius:.5rem; cursor:pointer}
+    .btn.primary{border-color:var(--accent); color:#fff}
+
+    /* Mensajes */
+    #toast{position:fixed; top:80px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,.85); color:#fff; padding:.6rem .9rem; border-radius:.5rem; opacity:0; pointer-events:none; transition:opacity .2s}
+    #toast.show{opacity:1}
+    #result{margin-top:.5rem; color:var(--muted); text-align:center}
+
+    /* Mobile tweaks */
+    @media (max-width:420px){
+      .key{padding:.75rem .4rem}
+      .kb-row.low{grid-template-columns:1.7fr repeat(7,1fr) 1.7fr}
+    }
+  </style>
 </head>
 <body>
-  <h1>ADIVINA LA PALABRA SECRETA</h1>
-  <p class="intro-text">🚨 ¡Atención GTs! Esta vez entramos al nivel extremo del juego 🔥.<br>La palabra secreta está mucho más complicada de descubrir, pero la recompensa vale el esfuerzo. 🎁 Quienes logren adivinarla participarán en el sorteo de un premio especial.<br><b>¡Mucha suerte!</b></p>
- <div class="input-group-wrapper">
-  <div class="attempts attempts-right" id="attemptsCounter">Intentos: 0</div>
-  <div class="input-group">
-    <input type="text" id="guessInput" placeholder="Escribe una palabra..." />
-    <button id="btnGuess"><b>Intentar</b></button>
-  </div>
-</div>
-  <ul id="results"></ul>
-  <script src="script.js"></script>
+  <header>
+    <h1>La Palabra del Día</h1>
+  </header>
+
+  <main class="container">
+    <div id="board" aria-label="Tablero del juego"></div>
+
+    <div id="kb" aria-label="Teclado en pantalla"></div>
+
+    <div class="actions">
+      <button class="btn" id="btn-reset" title="Empezar de nuevo">Reiniciar</button>
+      <button class="btn primary" id="btn-share" title="Copiar resultado">Compartir</button>
+    </div>
+
+    <div id="result" role="status"></div>
+  </main>
+
+  <div id="toast" role="alert"></div>
+
+  <script>
+    /************************************
+     * CONFIGURACIÓN RÁPIDA
+     ************************************/
+    // 1) Cambia la palabra objetivo aquí (usa MAYÚSCULAS; puede incluir Ñ y tildes)
+    let TARGET_WORD = "CARGO"; // ← cámbiala fácil
+
+    // 2) También puedes fijarla por URL: ?w=palabra (sobrescribe la de arriba)
+    //    Ej: https://tuusuario.github.io/tu-repo/?w=logística
+
+    // 3) Longitud de la palabra y número de intentos
+    const WORD_LENGTH = 5;   // ajusta si usas palabras de otra longitud
+    const MAX_TRIES   = 6;
+
+    // 4) Paleta de emojis para compartir
+    const EMOJI = { hit:"🟩", near:"🟨", miss:"⬛" };
+
+    /************************************
+     * UTILIDADES DE IDIOMA
+     ************************************/
+    // QWERTY en español con Ñ
+    const KB_ROWS = [
+      "QWERTYUIOP".split(""),
+      "ASDFGHJKLÑ".split(""),
+      ["Enter","Z","X","C","V","B","N","M","Backspace"]
+    ];
+
+    // Normaliza tildes, PERO conserva Ñ
+    function stripAccentsKeepEnye(str){
+      // Primero protegemos Ñ/ñ con tokens temporales
+      const PROT_UP = "__ENYE_UP__"; const PROT_LO = "__ENYE_LO__";
+      str = str.replace(/Ñ/g, PROT_UP).replace(/ñ/g, PROT_LO);
+      // Reemplazos de vocales acentuadas
+      const map = [
+        [/Á|À|Â|Ã|Ä/g, "A"], [/á|à|â|ã|ä/g, "a"],
+        [/É|È|Ê|Ë/g, "E"], [/é|è|ê|ë/g, "e"],
+        [/Í|Ì|Î|Ï/g, "I"], [/í|ì|î|ï/g, "i"],
+        [/Ó|Ò|Ô|Õ|Ö/g, "O"], [/ó|ò|ô|õ|ö/g, "o"],
+        [/Ú|Ù|Û|Ü/g, "U"], [/ú|ù|û|ü/g, "u"]
+      ];
+      for (const [re,to] of map) str = str.replace(re,to);
+      // Retornamos las Ñ protegidas
+      return str.replace(new RegExp(PROT_UP,'g'),"Ñ").replace(new RegExp(PROT_LO,'g'),"ñ");
+    }
+
+    function normalizeWord(str){
+      return stripAccentsKeepEnye(str).toUpperCase().replace(/[^A-ZÑ]/g,"");
+    }
+
+    // Lee parámetro w de la URL
+    const params = new URLSearchParams(location.search);
+    if (params.get('w')) TARGET_WORD = params.get('w');
+    TARGET_WORD = normalizeWord(TARGET_WORD);
+
+    // Validaciones simples
+    if (!TARGET_WORD || TARGET_WORD.length === 0){ TARGET_WORD = "CARGO"; }
+    const EFFECTIVE_LEN = WORD_LENGTH || TARGET_WORD.length;
+
+    // Estado del juego
+    let currentRow = 0; let currentCol = 0; let grid = [];
+    let finished = false; let won = false;
+
+    // Persistencia mínima por sesión (opcional): clave por palabra
+    const STORAGE_KEY = "lpdd_" + TARGET_WORD + "_" + EFFECTIVE_LEN + "_" + MAX_TRIES;
+    function saveState(){
+      const data = {currentRow,currentCol,grid,finished,won};
+      try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }catch(e){}
+    }
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return;
+        const d = JSON.parse(raw);
+        if (!d) return;
+        currentRow = d.currentRow||0; currentCol = d.currentCol||0; grid = d.grid||[]; finished = !!d.finished; won = !!d.won;
+      }catch(e){}
+    }
+
+    /************************************
+     * RENDERIZADO
+     ************************************/
+    const boardEl = document.getElementById('board');
+    const kbEl    = document.getElementById('kb');
+    const toastEl = document.getElementById('toast');
+    const resultEl= document.getElementById('result');
+
+    function setupBoard(){
+      boardEl.style.setProperty('--rows', MAX_TRIES);
+      boardEl.style.setProperty('--cols', EFFECTIVE_LEN);
+      boardEl.innerHTML = '';
+      for (let r=0; r<MAX_TRIES; r++){
+        const row = document.createElement('div'); row.className='row';
+        const arr = grid[r] || new Array(EFFECTIVE_LEN).fill({ch:"", st:""});
+        grid[r] = arr;
+        for (let c=0; c<EFFECTIVE_LEN; c++){
+          const t = document.createElement('div'); t.className = 'tile';
+          const cell = grid[r][c];
+          if (cell.ch){ t.textContent = cell.ch; t.classList.add('filled'); }
+          if (cell.st){ t.classList.add('reveal', cell.st); }
+          row.appendChild(t);
+        }
+        boardEl.appendChild(row);
+      }
+    }
+
+    function setupKeyboard(){
+      kbEl.innerHTML = '';
+      const rows = [document.createElement('div'), document.createElement('div'), document.createElement('div')];
+      rows[0].className='kb-row top'; rows[1].className='kb-row mid'; rows[2].className='kb-row low';
+      KB_ROWS.forEach((rowKeys, idx)=>{
+        rowKeys.forEach(k=>{
+          const b = document.createElement('button'); b.className='key';
+          b.textContent = (k==='Backspace'? 'Borrar' : (k==='Enter'? 'Enviar' : k));
+          b.dataset.code = k;
+          if (k==='Enter' || k==='Backspace') b.classList.add('small');
+          b.addEventListener('click',()=>handleInput(k));
+          rows[idx].appendChild(b);
+        });
+        kbEl.appendChild(rows[idx]);
+      });
+    }
+
+    function toast(msg){
+      toastEl.textContent = msg; toastEl.classList.add('show');
+      setTimeout(()=>toastEl.classList.remove('show'), 1400);
+    }
+
+    function updateBoardCell(r,c){
+      const tile = boardEl.children[r].children[c]; const cell = grid[r][c];
+      tile.textContent = cell.ch || '';
+      tile.className = 'tile' + (cell.ch?' filled':'') + (cell.st? ' reveal '+cell.st:'');
+    }
+
+    function colorKeyboard(letter, status){
+      const btn = kbEl.querySelector(`.key:not([data-code="Enter"]):not([data-code="Backspace"])`+`[data-code="${letter}"]`);
+      if(!btn) return;
+      const order = {miss:1, near:2, hit:3};
+      const curr = btn.dataset.status ? order[btn.dataset.status] : 0;
+      if (order[status] > curr){
+        btn.dataset.status = status; btn.classList.remove('miss','near','hit'); btn.classList.add(status);
+      }
+    }
+
+    /************************************
+     * LÓGICA DEL JUEGO
+     ************************************/
+    function handleInput(key){
+      if (finished) return;
+      if (key === 'Backspace') { removeLetter(); return; }
+      if (key === 'Enter')     { submitRow();   return; }
+      // Aceptamos letras A-Z y Ñ
+      if (/^[A-ZÑ]$/.test(key)) addLetter(key);
+    }
+
+    function addLetter(ch){
+      if (currentCol >= EFFECTIVE_LEN) return;
+      grid[currentRow][currentCol] = {ch, st:""};
+      updateBoardCell(currentRow,currentCol);
+      currentCol++; saveState();
+    }
+
+    function removeLetter(){
+      if (currentCol <= 0) return; currentCol--;
+      grid[currentRow][currentCol] = {ch:"", st:""};
+      updateBoardCell(currentRow,currentCol); saveState();
+    }
+
+    function evaluateGuess(guess){
+      const target = TARGET_WORD; // ya normalizada
+      const g = normalizeWord(guess);
+      const t = normalizeWord(target);
+      const res = new Array(EFFECTIVE_LEN).fill('miss');
+
+      // Conteo por letras para near
+      const count = {};
+      for (let i=0;i<EFFECTIVE_LEN;i++){
+        const ch = t[i]; count[ch] = (count[ch]||0)+1;
+      }
+      // Primero hits exactos
+      for (let i=0;i<EFFECTIVE_LEN;i++){
+        if (g[i]===t[i]){ res[i]='hit'; count[g[i]]--; }
+      }
+      // Luego near cuando hay disponibilidad
+      for (let i=0;i<EFFECTIVE_LEN;i++){
+        if (res[i]==='hit') continue;
+        const ch = g[i];
+        if (count[ch]>0){ res[i]='near'; count[ch]--; }
+      }
+      return res;
+    }
+
+    function submitRow(){
+      if (currentCol < EFFECTIVE_LEN){ toast('Completa la palabra'); return; }
+      const guess = grid[currentRow].map(x=>x.ch).join('');
+      const evals = evaluateGuess(guess);
+      for (let i=0;i<EFFECTIVE_LEN;i++){
+        grid[currentRow][i].st = evals[i];
+        updateBoardCell(currentRow,i);
+        colorKeyboard(grid[currentRow][i].ch, evals[i]);
+      }
+      const ok = evals.every(x=>x==='hit');
+      if (ok){ finished=true; won=true; resultEl.textContent = `¡Acertaste! La palabra era "${TARGET_WORD}".`; toast('¡Excelente!'); saveState(); return; }
+      currentRow++; currentCol=0; saveState();
+      if (currentRow>=MAX_TRIES){ finished=true; won=false; resultEl.textContent = `Se acabaron los intentos. La palabra era "${TARGET_WORD}".`; toast('Inténtalo mañana'); saveState(); }
+    }
+
+    function onKeydown(e){
+      const k = e.key;
+      if (/^[a-zA-Z]$/.test(k)) handleInput(k.toUpperCase());
+      else if (k==='Enter' || k==='Backspace') handleInput(k);
+      // Mapear tildes rápidamente
+      const map = { 'á':'A','é':'E','í':'I','ó':'O','ú':'U','Á':'A','É':'E','Í':'I','Ó':'O','Ú':'U','ñ':'Ñ','Ñ':'Ñ' };
+      if (map[k]) handleInput(map[k]);
+    }
+
+    function resetGame(){
+      currentRow=0; currentCol=0; grid=[]; finished=false; won=false; resultEl.textContent='';
+      localStorage.removeItem(STORAGE_KEY);
+      setupBoard(); setupKeyboard(); saveState();
+    }
+
+    function shareResult(){
+      let out = `La Palabra del Día ${won?currentRow:MAX_TRIES}/${MAX_TRIES}\n`;
+      for (let r=0;r<Math.min(currentRow, MAX_TRIES); r++){
+        const line = (grid[r]||[]).map(c=>EMOJI[c.st||'miss']||EMOJI.miss).join('');
+        out += line + "\n";
+      }
+      if (finished && !won){
+        const last = (grid[MAX_TRIES-1]||[]).map(c=>EMOJI[c.st||'miss']||EMOJI.miss).join('');
+        if (last) out += last + "\n";
+      }
+      out += location.href.split('?')[0];
+      navigator.clipboard.writeText(out).then(()=>toast('Resultado copiado'));
+    }
+
+    // Inicializar
+    loadState();
+    setupBoard();
+    setupKeyboard();
+    document.addEventListener('keydown', onKeydown);
+    document.getElementById('btn-reset').addEventListener('click', resetGame);
+    document.getElementById('btn-share').addEventListener('click', shareResult);
+  </script>
 </body>
 </html>
