@@ -122,15 +122,15 @@
      * CONFIGURACIÓN RÁPIDA
      ************************************/
     // 1) Cambia la palabra objetivo aquí (usa MAYÚSCULAS; puede incluir Ñ y tildes)
-    let TARGET_WORD = "FIABILIDAD"; // ← cámbiala fácil
+    let TARGET_WORD = "COHESIÓN"; // ← cámbiala fácil
 
     // 2) También puedes fijarla por URL: ?w=palabra (sobrescribe la de arriba)
     const params = new URLSearchParams(location.search);
     if (params.get('w')) TARGET_WORD = params.get('w');
 
     // 3) Longitud de la palabra y número de intentos
-    const WORD_LENGTH = 10;   // ajusta si usas palabras de otra longitud
-    const MAX_TRIES   = 6;
+    const WORD_LENGTH = 8;   // ajusta si usas palabras de otra longitud
+    const MAX_TRIES   = 5;
 
     // 4) Paleta de emojis para compartir
     const EMOJI = { hit:"🟩", near:"🟨", miss:"⬛" };
